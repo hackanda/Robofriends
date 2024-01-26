@@ -2,7 +2,9 @@
 Initial React Project 
 
 
+
 React/Redux Notes:
+
     1. Redux has 3 Principles:
         a. Single Source of Truth - One Giant State object handling all the state related data
         b. State is read only - State Object is never modified. If we want to change state,
