@@ -131,12 +131,19 @@ React/Redux Notes:
 
                 const store = createStore(rootReducer, applyMiddleware(...));
 
-    10. Redux Async Actions: Not all the actions are performed by the user. Some actions are Asynchronous in nature like fetch();
+    10. Redux Thunk: ( Async Actions ) -> Not all the actions are performed by the user. Some actions are Asynchronous in nature like fetch();
         These actions can not be used directly just like any other actions as at the time when action is performed, the reducer will be called instantaneously
         and by that time the result of that action would not have come back. Hence the reducer will not have the actual payload data.
         In these cases, we pass the dispatch function to the action itself and within the action we call the dispatch instead of dispatching it from
         mapDispatchToProps function.
         e.g. ->
+                index.js
+                import thunkMiddleware from 'redux-thunk';
+
+                const store = createStore( rootReducer, applyMiddleware( thunkMiddleware, logger );
+
+                -> We can have multiple Middlewares. We just need to pass them as the arguments to the function.
+
                 Actions.js
                     const fetchRobots = (dispatch) => {
                         dispatch({type: 'REQUEST_PENDING'});
