@@ -136,6 +136,8 @@ React/Redux Notes:
         and by that time the result of that action would not have come back. Hence the reducer will not have the actual payload data.
         In these cases, we pass the dispatch function to the action itself and within the action we call the dispatch instead of dispatching it from
         mapDispatchToProps function.
+
+        Redux Thunk is one the the libraries to handle async actions.
         e.g. ->
                 index.js
                 import thunkMiddleware from 'redux-thunk';
