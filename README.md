@@ -97,5 +97,62 @@ React/Redux Notes:
                         export default connect(mapStateToProps, mapDispatchToProps)(App)
                 -> The method Connect is a Higher Order Function which means it returns a method instead of a normal Value/Object.
 
-        6. ACTION ( USER ) => Actions.js method => Reducers.js reducer => Provider ( Pass down the Updated State ) => Connect ( Subscribe to the Latest state changes )
+    7. ACTION ( USER ) => Actions.js method => Reducers.js reducer => Provider ( Pass down the Updated State ) => Connect ( Subscribe to the Latest state changes )
 
+    8. Redux Middleware :
+        a. Redux gives us another method called applyMiddleware() in which we can pass a function. This function then gets called as soon as an action is performed.
+        b. The syntax to use Middleware is:
+            e.g. ->
+                    import {applyMiddleware} from 'redux';
+
+                    const store = createStore(reducer, applyMiddleware(anotherMethod));
+        c. One good example of a Middleware is redux logger which is used to log each and every action that is performed. This logger then can be passed as an argument
+            to the Middleware function and hence it will be called upon each action.
+            e.g. ->
+                    import {createLogger} from 'redux-logger';
+
+                    const logger = createLogger();
+                    const store = createStore(reducerFunction, applyMiddleware(logger));
+        d. Middleware changes the redux diagram as below:
+            e.g. ->
+                    Action ( User ) -> Middleware -> Reducer -> Store -> View
+
+    9. Combine Reducers : There will be scenarios where we will be creating multiple reducers based on the different actions.
+        Redux provides us with another method which takes all the reducers in an object as the argument and then the function returns the root reducer.
+        e.g. ->
+                import {combineReducers} from 'redux';
+
+                const rootReducer = combineReducers(
+                    {
+                        reducer1,
+                        reducer2....
+                    }
+                );
+
+                const store = createStore(rootReducer, applyMiddleware(...));
+
+    10. Redux Async Actions: Not all the actions are performed by the user. Some actions are Asynchronous in nature like fetch();
+        These actions can not be used directly just like any other actions as at the time when action is performed, the reducer will be called instantaneously
+        and by that time the result of that action would not have come back. Hence the reducer will not have the actual payload data.
+        In these cases, we pass the dispatch function to the action itself and within the action we call the dispatch instead of dispatching it from
+        mapDispatchToProps function.
+        e.g. ->
+                Actions.js
+                    const fetchRobots = (dispatch) => {
+                        dispatch({type: 'REQUEST_PENDING'});
+                        fetch('Some/Url')
+                            .then( response => response.json()) // In Case the request is successful
+                            .then ( data => dispatch( {type: REQUEST_SUCCESS, payload : data}) )
+                            .catch( error => dispatch( {type: REQUEST_FAILED, payload  : error}) );
+                    }
+
+                App.js
+                    const mapDispatchToProps = (dispatch) {
+                        return {
+                            onSaerchRobots : dispatch(setSearchField()); // Normal Action performed by the User
+                            onRequestRobots : fetchRobots(dispatch); // Async Action Performed by the application
+                        };
+                    }
+
+        -> Dispatch method dispatches the action to the store, Basically meaning upon an action, it calls the rootReducer which checks all ther reducers and then
+            based on matching by action.type it updates the state accordingly.
